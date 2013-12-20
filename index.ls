@@ -11,6 +11,16 @@ delay = 60000
 audio-remind = null
 audio-end = null
 
+mc-audio = (strings) ->
+  tokens = strings / '_'
+  url = 'audio/mcmj/'
+  sounds = for token in tokens
+    token = url + token + '.mp3'
+  playing = new Howl do
+    urls: sounds
+  playing.play!
+mc-audio 'ohno_wts_de_qz'
+
 new-audio = (file) ->
   node = new Audio!
     ..src = file
@@ -116,4 +126,5 @@ window.onload = ->
   #audio-end := new-audio \audio/fire-alarm.mp3
   audio-remind := new-audio \audio/smb_warning.mp3
   audio-end := new-audio \audio/smb_mariodie.mp3
+  #audio-end := mc-audio 'ohno_wts_de_qz'
 window.onresize = -> resize!
