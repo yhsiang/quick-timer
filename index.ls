@@ -97,7 +97,8 @@ count = ->
     sound-toggle audio-remind, true
   if diff < 55000 => sound-toggle audio-remind, false
   if diff < 0 and !is-blink =>
-    sound-toggle audio-end, true
+    #sound-toggle audio-end, true
+    mc-audio 'ohno_wts_de_qz'
     is-blink := true
     diff = 0
     clearInterval handler
@@ -131,5 +132,5 @@ window.onload = ->
   #audio-end := new-audio \audio/fire-alarm.mp3
   audio-remind := new-audio \audio/smb_warning.mp3
   #audio-end := new-audio \audio/smb_mariodie.mp3
-  audio-end := mc-audio 'ohno_wts_de_qz'
+  #audio-end := mc-audio 'ohno_wts_de_qz'
 window.onresize = -> resize!
