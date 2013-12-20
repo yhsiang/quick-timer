@@ -1,5 +1,5 @@
 (function(){
-  var start, isBlink, isLight, isRun, isShow, isWarned, handler, latency, stopBy, delay, audioRemind, audioEnd, mcAudio, newAudio, soundToggle, show, adjust, toggle, reset, blink, count, run, resize, split$ = ''.split;
+  var start, isBlink, isLight, isRun, isShow, isWarned, handler, latency, stopBy, delay, audioRemind, audioEnd, mcAudio, newAudio, soundToggle, show, adjust, toggle, reset, blink, count, run, resize, split$ = ''.split, replace$ = ''.replace;
   start = null;
   isBlink = false;
   isLight = true;
@@ -13,7 +13,7 @@
   audioRemind = null;
   audioEnd = null;
   mcAudio = function(strings){
-    var tokens, url, sounds, res$, i$, len$, token, playing, results$ = [];
+    var tokens, url, sounds, res$, i$, len$, token, playing;
     tokens = split$.call(strings, '_');
     url = 'audio/mcmj/';
     res$ = [];
@@ -23,16 +23,18 @@
       res$.push(url + token + '.ogg');
     }
     sounds = res$;
-    for (i$ = 0, len$ = tokens.length; i$ < len$; ++i$) {
-      token = tokens[i$];
-      playing = new Howl({
-        urls: sounds
-      });
-      results$.push(playing.play());
-    }
-    return results$;
+    playing = new Howl({
+      urls: sounds,
+      onend: function(){
+        if (tokens.length > 1) {
+          return mcAudio(replace$.call(strings, tokens[0] + '_', ''));
+        } else {
+          return this.unload();
+        }
+      }
+    });
+    return playing.play();
   };
-  mcAudio('ohno_wts_de_qz');
   newAudio = function(file){
     var x$, node;
     x$ = node = new Audio();
@@ -173,7 +175,7 @@
     $('#timer').text(delay);
     resize();
     audioRemind = newAudio('audio/smb_warning.mp3');
-    return audioEnd = newAudio('audio/smb_mariodie.mp3');
+    return audioEnd = mcAudio('ohno_wts_de_qz');
   };
   window.onresize = function(){
     return resize();

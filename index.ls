@@ -17,11 +17,14 @@ mc-audio = (strings) ->
   sounds = for token in tokens
     * url + token + '.mp3'
     * url + token + '.ogg'
-  for token in tokens
-    playing = new Howl do
-      urls: sounds
-    playing.play!
-mc-audio 'ohno_wts_de_qz'
+  playing = new Howl do
+    urls: sounds
+    onend: ->
+      if tokens.length > 1 
+        mc-audio strings - (tokens.0 + '_')
+      else
+        @unload!
+  playing.play!
 
 new-audio = (file) ->
   node = new Audio!
@@ -127,6 +130,6 @@ window.onload = ->
   #audio-remind := new-audio \audio/cop-car.mp3
   #audio-end := new-audio \audio/fire-alarm.mp3
   audio-remind := new-audio \audio/smb_warning.mp3
-  audio-end := new-audio \audio/smb_mariodie.mp3
-  #audio-end := mc-audio 'ohno_wts_de_qz'
+  #audio-end := new-audio \audio/smb_mariodie.mp3
+  audio-end := mc-audio 'ohno_wts_de_qz'
 window.onresize = -> resize!
