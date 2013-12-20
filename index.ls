@@ -11,6 +11,18 @@ delay = 60000
 audio-remind = null
 audio-end = null
 
+ly-audio = (name) ->
+  path = 'audio/ly/'
+  sounds =
+    * path + name + '.mp3'
+    * path + name + '.ogg'
+  playing = new Howl do
+    urls: sounds
+    onend: ->
+        mc-audio 'ohno_wts_de_qz'
+        @unload!
+  playing.play!  
+
 mc-audio = (strings) ->
   tokens = strings / '_'
   url = 'audio/mcmj/'
@@ -94,11 +106,13 @@ count = ->
   if diff > 60000 => is-warned := false
   if diff < 60000 and !is-warned =>
     is-warned := true
-    sound-toggle audio-remind, true
-  if diff < 55000 => sound-toggle audio-remind, false
+    #sound-toggle audio-remind, true
+    mc-audio 'and_yi_fen'
+  #if diff < 55000 => sound-toggle audio-remind, false
   if diff < 0 and !is-blink =>
     #sound-toggle audio-end, true
-    mc-audio 'ohno_wts_de_qz'
+    #mc-audio 'ohno_wts_de_qz'
+    ly-audio 'wang'
     is-blink := true
     diff = 0
     clearInterval handler
@@ -130,7 +144,7 @@ window.onload = ->
   resize!
   #audio-remind := new-audio \audio/cop-car.mp3
   #audio-end := new-audio \audio/fire-alarm.mp3
-  audio-remind := new-audio \audio/smb_warning.mp3
+  #audio-remind := new-audio \audio/smb_warning.mp3
   #audio-end := new-audio \audio/smb_mariodie.mp3
   #audio-end := mc-audio 'ohno_wts_de_qz'
 window.onresize = -> resize!

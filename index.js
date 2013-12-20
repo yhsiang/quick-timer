@@ -1,4 +1,4 @@
-var start, isBlink, isLight, isRun, isShow, isWarned, handler, latency, stopBy, delay, audioRemind, audioEnd, mcAudio, newAudio, soundToggle, show, adjust, toggle, reset, blink, count, run, resize, split$ = ''.split, replace$ = ''.replace;
+var start, isBlink, isLight, isRun, isShow, isWarned, handler, latency, stopBy, delay, audioRemind, audioEnd, lyAudio, mcAudio, newAudio, soundToggle, show, adjust, toggle, reset, blink, count, run, resize, split$ = ''.split, replace$ = ''.replace;
 start = null;
 isBlink = false;
 isLight = true;
@@ -11,6 +11,19 @@ stopBy = null;
 delay = 60000;
 audioRemind = null;
 audioEnd = null;
+lyAudio = function(name){
+  var path, sounds, playing;
+  path = 'audio/ly/';
+  sounds = [path + name + '.mp3', path + name + '.ogg'];
+  playing = new Howl({
+    urls: sounds,
+    onend: function(){
+      mcAudio('ohno_wts_de_qz');
+      return this.unload();
+    }
+  });
+  return playing.play();
+};
 mcAudio = function(strings){
   var tokens, url, sounds, res$, i$, len$, token, playing;
   tokens = split$.call(strings, '_');
@@ -124,13 +137,10 @@ count = function(){
   }
   if (diff < 60000 && !isWarned) {
     isWarned = true;
-    soundToggle(audioRemind, true);
-  }
-  if (diff < 55000) {
-    soundToggle(audioRemind, false);
+    mcAudio('and_yi_fen');
   }
   if (diff < 0 && !isBlink) {
-    mcAudio('ohno_wts_de_qz');
+    lyAudio('wang');
     isBlink = true;
     diff = 0;
     clearInterval(handler);
@@ -172,8 +182,7 @@ resize = function(){
 };
 window.onload = function(){
   $('#timer').text(delay);
-  resize();
-  return audioRemind = newAudio('audio/smb_warning.mp3');
+  return resize();
 };
 window.onresize = function(){
   return resize();
