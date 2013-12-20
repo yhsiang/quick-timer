@@ -15,10 +15,12 @@ mc-audio = (strings) ->
   tokens = strings / '_'
   url = 'audio/mcmj/'
   sounds = for token in tokens
-    token = url + token + '.mp3'
-  playing = new Howl do
-    urls: sounds
-  playing.play!
+    * url + token + '.mp3'
+    * url + token + '.ogg'
+  for token in tokens
+    playing = new Howl do
+      urls: sounds
+    playing.play!
 mc-audio 'ohno_wts_de_qz'
 
 new-audio = (file) ->

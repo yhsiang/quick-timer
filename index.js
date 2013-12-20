@@ -13,19 +13,24 @@
   audioRemind = null;
   audioEnd = null;
   mcAudio = function(strings){
-    var tokens, url, sounds, res$, i$, len$, token, playing;
+    var tokens, url, sounds, res$, i$, len$, token, playing, results$ = [];
     tokens = split$.call(strings, '_');
     url = 'audio/mcmj/';
     res$ = [];
     for (i$ = 0, len$ = tokens.length; i$ < len$; ++i$) {
       token = tokens[i$];
-      res$.push(token = url + token + '.mp3');
+      url + token + '.mp3';
+      res$.push(url + token + '.ogg');
     }
     sounds = res$;
-    playing = new Howl({
-      urls: sounds
-    });
-    return playing.play();
+    for (i$ = 0, len$ = tokens.length; i$ < len$; ++i$) {
+      token = tokens[i$];
+      playing = new Howl({
+        urls: sounds
+      });
+      results$.push(playing.play());
+    }
+    return results$;
   };
   mcAudio('ohno_wts_de_qz');
   newAudio = function(file){
