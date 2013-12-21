@@ -9,19 +9,15 @@ latency = 0
 stop-by = null
 delay = 60000
 audio-remind = null
-audio-end = null
-
-ly-audio = (name) ->
-  path = 'audio/ly/'
-  sounds =
-    * path + name + '.mp3'
-    * path + name + '.ogg'
-  playing = new Howl do
-    urls: sounds
-    onend: ->
-        mc-audio 'ohno_wts_de_qz'
-        @unload!
-  playing.play!  
+audio-end = new Howl do
+  urls: ['audio/ly/wang.ogg', 'audio/ly/wang.mp3']
+  sprite: do
+    start: [0, 3000],
+    mid: [20000,5000],
+    end: [60000, 3000]
+  onend: ->
+    mc-audio 'ohno_wts_de_qz'
+    @unload!
 
 mc-audio = (strings) ->
   tokens = strings / '_'
@@ -71,16 +67,18 @@ toggle = ->
     stop-by := new Date!
     clearInterval handler
     handler := null
-    sound-toggle audio-end, false
-    sound-toggle audio-remind, false
+    #sound-toggle audio-end, false
+    #sound-toggle audio-remind, false
+    audio-end.stop!
   if stop-by =>
     latency := latency + (new Date!)getTime! - stop-by.getTime!
   if is-run => run!
 
 reset = ->
   if delay == 0 => delay := 1000
-  sound-toggle audio-remind, false
-  sound-toggle audio-end, false
+  #sound-toggle audio-remind, false
+  #sound-toggle audio-end, false
+  audio-end.stop!
   stop-by := 0
   is-warned := false
   is-blink := false
@@ -112,7 +110,7 @@ count = ->
   if diff < 0 and !is-blink =>
     #sound-toggle audio-end, true
     #mc-audio 'ohno_wts_de_qz'
-    ly-audio 'wang'
+    audio-end.play \mid
     is-blink := true
     diff = 0
     clearInterval handler

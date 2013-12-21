@@ -1,4 +1,4 @@
-var start, isBlink, isLight, isRun, isShow, isWarned, handler, latency, stopBy, delay, audioRemind, audioEnd, lyAudio, mcAudio, newAudio, soundToggle, show, adjust, toggle, reset, blink, count, run, resize, split$ = ''.split, replace$ = ''.replace;
+var start, isBlink, isLight, isRun, isShow, isWarned, handler, latency, stopBy, delay, audioRemind, audioEnd, mcAudio, newAudio, soundToggle, show, adjust, toggle, reset, blink, count, run, resize, split$ = ''.split, replace$ = ''.replace;
 start = null;
 isBlink = false;
 isLight = true;
@@ -10,20 +10,18 @@ latency = 0;
 stopBy = null;
 delay = 60000;
 audioRemind = null;
-audioEnd = null;
-lyAudio = function(name){
-  var path, sounds, playing;
-  path = 'audio/ly/';
-  sounds = [path + name + '.mp3', path + name + '.ogg'];
-  playing = new Howl({
-    urls: sounds,
-    onend: function(){
-      mcAudio('ohno_wts_de_qz');
-      return this.unload();
-    }
-  });
-  return playing.play();
-};
+audioEnd = new Howl({
+  urls: ['audio/ly/wang.ogg', 'audio/ly/wang.mp3'],
+  sprite: {
+    start: [0, 3000],
+    mid: [20000, 5000],
+    end: [60000, 3000]
+  },
+  onend: function(){
+    mcAudio('ohno_wts_de_qz');
+    return this.unload();
+  }
+});
 mcAudio = function(strings){
   var tokens, url, sounds, res$, i$, len$, token, playing;
   tokens = split$.call(strings, '_');
@@ -92,8 +90,7 @@ toggle = function(){
     stopBy = new Date();
     clearInterval(handler);
     handler = null;
-    soundToggle(audioEnd, false);
-    soundToggle(audioRemind, false);
+    audioEnd.stop();
   }
   if (stopBy) {
     latency = latency + new Date().getTime() - stopBy.getTime();
@@ -106,8 +103,7 @@ reset = function(){
   if (delay === 0) {
     delay = 1000;
   }
-  soundToggle(audioRemind, false);
-  soundToggle(audioEnd, false);
+  audioEnd.stop();
   stopBy = 0;
   isWarned = false;
   isBlink = false;
@@ -140,7 +136,7 @@ count = function(){
     mcAudio('and_yi_fen');
   }
   if (diff < 0 && !isBlink) {
-    lyAudio('wang');
+    audioEnd.play('mid');
     isBlink = true;
     diff = 0;
     clearInterval(handler);
